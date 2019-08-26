@@ -77,7 +77,7 @@ def ausgabe(update,context):
 
 @restricted
 def account(update,context):
-    PRINT ACCOUNT
+    print(ACCOUNT)
     account = str(update.message.text)
     account = account.lower()
     account = account.strip()

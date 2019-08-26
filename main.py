@@ -231,7 +231,7 @@ def tag_alert(update,context):
 def saved_alert(update,context):
     limit = str(update.message.text)
     try:
-        expense = float(expense.replace(',','.'))
+        limit = float(limit.replace(',','.'))
     except:
         update.message.reply_text('Eingabe ist keine Zahl,der Eintrag wurde nicht gespeichert!')
         return ConversationHandler.END

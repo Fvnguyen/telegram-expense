@@ -1,5 +1,6 @@
 import pickle
 import redis
+import os
 infile = open('migrate','rb')
 data = pickle.load(infile)
 infile.close()

@@ -211,11 +211,9 @@ def overview(update, context):
         jahr_sum = jahr['Betrag'].sum()
         overview = 'Diesen Monat hast Du ' + str(monat_sum) + '€ ausgegeben und dieses Jahr bislang ' + str(jahr_sum) + '€'
         context.bot.send_message(chat_id=update.message.chat_id, text=overview)
-        return ConversationHandler.END
     except:
         print('Proper except return')
         context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
-        return ConversationHandler.END
 
 overview_handler = CommandHandler("report", overview)
 dispatcher.add_handler(overview_handler)
@@ -227,11 +225,10 @@ def sum_typ(update, context):
     try:
         summe = df.groupby(['Type'])['Betrag'].sum().to_string()
         context.bot.send_message(chat_id=update.message.chat_id, text=summe)
-        return ConversationHandler.END
     except:
         print('Proper except return')
         context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
-        return ConversationHandler.END
+
 
 typsum_handler = CommandHandler("typ", sum_typ)
 dispatcher.add_handler(typsum_handler)
@@ -240,7 +237,6 @@ dispatcher.add_handler(typsum_handler)
 @restricted
 def unknown(update, context):
     context.bot.send_message(chat_id=update.message.chat_id, text="Diesen Befehl gibt es nicht, bitte benutze das Command-Menü unten rechts.")
-    return ConversationHandler.END
 
 unknown_handler = MessageHandler(Filters.command, unknown)
 dispatcher.add_handler(unknown_handler)

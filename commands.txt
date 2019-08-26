@@ -1,0 +1,5 @@
+ausgabe - Trage eine neue Ausgabe mit Typ und Betrag ein
+letzte - Lass dir die letzten 5 Ausgaben anzeigen
+tags - Zeigt alle bislang verwendeten Ausgabentypen
+report - Zeigt die aktuelle Summe der Ausgabe diesen Monats und des gesamten Jahres
+typ - Zeigt die gesamten Ausgaben je Typ

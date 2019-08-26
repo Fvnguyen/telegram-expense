@@ -68,7 +68,7 @@ def restricted(func):
     return wrapped
 
 # Primary saving handler
-ACCOUNT, NEW_ACCOUNT, EXPENSE, SAVED = range(4)
+ACCOUNT, NEW_ACCOUNT, EXPENSE, SAVED, TAG, ALERT = range(6)
 #ACCOUNT, EXPENSE, SAVED = range(3)
 
 @restricted

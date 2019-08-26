@@ -194,11 +194,11 @@ def show_tags(update, context):
         tags = ', '.join(tags)
         print(tags)
         context.bot.send_message(chat_id=update.message.chat_id, text=tags)
-        if ACCOUNT == 1:
+        if ACCOUNT:
             cancel()
     else:
         context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
-        if ACCOUNT == 1:
+        if ACCOUNT :
             cancel()
 
 tag_handler = CommandHandler("tags", show_tags)

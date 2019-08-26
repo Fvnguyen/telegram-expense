@@ -71,6 +71,7 @@ dispatcher.add_handler(start_handler)
 
 @restricted #user restriction
 def ausgabe(update,context):
+    update.message.reply_text('Ich zeichne jetzt gerne deine Ausgabe auf, solltest du dies abbrechen wollen kannst du jederzeit /cancel eingeben.')
     update.message.reply_text('Was für eine Ausgabe möchest Du heute speichern? (Typ, für die Liste vorhandener Typen siehe /tags)')
     return ACCOUNT #Asks for type of expense to save
 
@@ -172,8 +173,10 @@ def show_last(update, context):
         df['Zeit'] = df['Zeit'].dt.strftime('%d/%m/%y')
         last_5 = df.tail(5).iloc[:,1:4].to_string(index = False,col_space = 9)
         context.bot.send_message(chat_id=update.message.chat_id, text=last_5)
+        return ConversationHandler.END
     except:
         context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
+        return ConversationHandler.END
 
 last_handler = CommandHandler("letzte", show_last)
 dispatcher.add_handler(last_handler)
@@ -190,8 +193,14 @@ def show_tags(update, context):
         tags = ', '.join(tags)
         print(tags)
         context.bot.send_message(chat_id=update.message.chat_id, text=tags)
+        if ACCOUNT == 1:
+            context.bot.send_message(chat_id=update.message.chat_id, text='Bitte starte die Ausgabenaufzeichnung nun erneut.')
+        return ConversationHandler.END
     else:
         context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
+        if ACCOUNT == 1:
+            context.bot.send_message(chat_id=update.message.chat_id, text='Bitte starte die Ausgabenaufzeichnung nun erneut.')
+        return ConversationHandler.END
 
 tag_handler = CommandHandler("tags", show_tags)
 dispatcher.add_handler(tag_handler)
@@ -207,9 +216,11 @@ def overview(update, context):
         jahr_sum = jahr['Betrag'].sum()
         overview = 'Diesen Monat hast Du ' + str(monat_sum) + '€ ausgegeben und dieses Jahr bislang ' + str(jahr_sum) + '€'
         context.bot.send_message(chat_id=update.message.chat_id, text=overview)
+        return ConversationHandler.END
     except:
         print('Proper except return')
         context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
+        return ConversationHandler.END
 
 overview_handler = CommandHandler("report", overview)
 dispatcher.add_handler(overview_handler)
@@ -221,9 +232,11 @@ def sum_typ(update, context):
     try:
         summe = df.groupby(['Type'])['Betrag'].sum().to_string()
         context.bot.send_message(chat_id=update.message.chat_id, text=summe)
+        return ConversationHandler.END
     except:
         print('Proper except return')
         context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
+        return ConversationHandler.END
 
 typsum_handler = CommandHandler("typ", sum_typ)
 dispatcher.add_handler(typsum_handler)
@@ -232,6 +245,7 @@ dispatcher.add_handler(typsum_handler)
 @restricted
 def unknown(update, context):
     context.bot.send_message(chat_id=update.message.chat_id, text="Diesen Befehl gibt es nicht, bitte benutze das Command-Menü unten rechts.")
+    return ConversationHandler.END
 
 unknown_handler = MessageHandler(Filters.command, unknown)
 dispatcher.add_handler(unknown_handler)

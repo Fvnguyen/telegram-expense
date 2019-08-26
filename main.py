@@ -215,7 +215,7 @@ def tag_alert(update,context):
         tags = [x.lower() for x in tags]
         tags = [x.strip() for x in tags]
         tags.sort()
-        if account in tags:
+        if tag in tags:
             # save selection into user data
             context.user_data['Type_alert']=tag
             update.message.reply_text('Und wie hoch soll Dein monatliches Limit sein?')

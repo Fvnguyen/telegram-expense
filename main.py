@@ -30,6 +30,16 @@ def loadDB(userID):
         print("did not load db")
         return {}
 
+def loadAlert(userID):
+    try:
+        filename = userID+'alert'
+        db = pickle.loads(r.get(filename))
+        print("loaded db")
+        return alert
+    except:
+        print("did not load db")
+        return {}
+
 def loadDF(userID):
     db = loadDB(userID)
     if any(db):
@@ -146,6 +156,26 @@ def expense(update,context):
         r.set(user_id,pdb)
     
     update.message.reply_text('Gespeichert!')
+    user_id = str(update.effective_user.id)
+    alert = loadAlert(user_id)
+    df = loadDF(user_id)
+    try:
+        alert_sum = df.loc[df['Type'] == context.user_data['Type']].sum()
+    except:
+        print('Proper except return')
+        context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
+        return ConversationHandler.END
+    try:
+        alert_delta = alert_sum-alert[str(context.user_data['Type'])]
+        if alert_delta <= 20:
+            alert_text = 'Achtung, nur noch ' + str(alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + 'bis zu deinem Limit diesen Monat!'
+            update.message.reply_text(alert_text)
+        elif alert_delta < 0:
+            alert_text = 'Achtung, du hast dein Limit um' + str(-1*alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + 'diesen Monat überschritten!'
+            update.message.reply_text(alert_text)
+    except:
+        print("Could not load alerts")
+        return ConversationHandler.END
     return ConversationHandler.END
 
 @restricted
@@ -163,6 +193,83 @@ conv_handler = ConversationHandler(
         fallbacks=[CommandHandler('cancel', cancel)]
     )
 dispatcher.add_handler(conv_handler,group = 1)
+
+
+# tag alert handler
+
+@restricted #user restriction
+def set_alert(update,context):
+    update.message.reply_text('Ich zeichne jetzt gerne ein Limit für deine Ausgabe auf, solltest du dies abbrechen wollen kannst du jederzeit /cancel eingeben.')
+    update.message.reply_text('Für welchen Ausgabentyp möchtest Du ein Limit setzen oder verändern? (Typ, für die Liste vorhandener Typen siehe /tags)')
+    return TAG #Asks for type of expense to save
+
+@restricted
+def tag_alert(update,context):
+    tag = str(update.message.text)
+    tag = tag.lower()
+    tag = tag.strip()
+    user_id = str(update.effective_user.id)
+    db = loadDB(user_id)
+    if  any(db):
+        tags = [x['Type'] for x in db if x]
+        tags = [x.lower() for x in tags]
+        tags = [x.strip() for x in tags]
+        tags.sort()
+        if account in tags:
+            # save selection into user data
+            context.user_data['Type_alert']=tag
+            update.message.reply_text('Und wie hoch soll Dein monatliches Limit sein?')
+            return ALERT
+        else:
+            update.message.reply_text('Diesen Ausgabentyp kenne ich nicht, versuche es noch einmal. (Für die Liste vorhandener Typen siehe /tags)')
+            return TAG
+    else:
+        update.message.reply_text('Du hast noch keine Ausgabentypen. Aufzeichnung wird abgebrochen.')
+        return ConversationHandler.END # Sets an alert for an expense type
+
+@restricted
+def saved_alert(update,context):
+    limit = str(update.message.text)
+    try:
+        expense = float(expense.replace(',','.'))
+    except:
+        update.message.reply_text('Eingabe ist keine Zahl,der Eintrag wurde nicht gespeichert!')
+        return ConversationHandler.END
+    # save selection into user data
+    context.user_data['alert_limit'] = limit
+    alert_entry = {
+        "ID" : update.effective_user.id,
+        "Type" : context.user_data['Type_alert'],
+        "Limit" : context.user_data['alert_limit']
+    }
+    # Load/create pickle and add new record, afterwards save pickle
+    try:
+        user_id = str(update.effective_user.id)
+        filename = user_id+'alert'
+        alerts = loadAlert(user_id)
+        alerts.update(entry)
+        palerts = pickle.dumps(alerts)
+        r.set(filename,palerts)
+    except:
+        user_id = str(update.effective_user.id)
+        filename = user_id+'alert'
+        alerts = list()
+        alerts.update(entry)
+        palerts = pickle.dumps(alerts)
+        r.set(filename,palerts)
+    
+    update.message.reply_text('Gespeichert!')
+    return ConversationHandler.END
+
+alert_handler = ConversationHandler(
+        entry_points=[CommandHandler('limit', set_alert)],
+        states={
+            TAG: [MessageHandler(Filters.text,tag_alert)],
+            ALERT: [MessageHandler(Filters.text,saved_alert)],
+            },
+        fallbacks=[CommandHandler('cancel', cancel)]
+    )
+dispatcher.add_handler(alert_handler,group = 2)
 
 
 # reporting handlers

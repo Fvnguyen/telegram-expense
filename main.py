@@ -162,7 +162,7 @@ conv_handler = ConversationHandler(
             },
         fallbacks=[CommandHandler('cancel', cancel)]
     )
-dispatcher.add_handler(conv_handler)
+dispatcher.add_handler(conv_handler,group = 1)
 
 
 # reporting handlers
@@ -194,12 +194,8 @@ def show_tags(update, context):
         tags = ', '.join(tags)
         print(tags)
         context.bot.send_message(chat_id=update.message.chat_id, text=tags)
-        if ACCOUNT:
-            cancel()
     else:
         context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
-        if ACCOUNT :
-            cancel()
 
 tag_handler = CommandHandler("tags", show_tags)
 dispatcher.add_handler(tag_handler)

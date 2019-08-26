@@ -77,6 +77,7 @@ def ausgabe(update,context):
 
 @restricted
 def account(update,context):
+    PRINT ACCOUNT
     account = str(update.message.text)
     account = account.lower()
     account = account.strip()
@@ -194,13 +195,11 @@ def show_tags(update, context):
         print(tags)
         context.bot.send_message(chat_id=update.message.chat_id, text=tags)
         if ACCOUNT == 1:
-            context.bot.send_message(chat_id=update.message.chat_id, text='Bitte starte die Ausgabenaufzeichnung nun erneut.')
-        return ConversationHandler.END
+            cancel()
     else:
         context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
         if ACCOUNT == 1:
-            context.bot.send_message(chat_id=update.message.chat_id, text='Bitte starte die Ausgabenaufzeichnung nun erneut.')
-        return ConversationHandler.END
+            cancel()
 
 tag_handler = CommandHandler("tags", show_tags)
 dispatcher.add_handler(tag_handler)

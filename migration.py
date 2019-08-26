@@ -1,3 +1,6 @@
+from datetime import datetime
+import pandas as pd
+from pandas import Timestamp
 data = [{'ID': 961108390,
   'Zeit': Timestamp('2019-07-30 18:54:03'),
   'Type': 'Restaurant',

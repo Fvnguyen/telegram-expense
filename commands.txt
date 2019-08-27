@@ -3,3 +3,4 @@ letzte - Lass dir die letzten 5 Ausgaben anzeigen
 tags - Zeigt alle bislang verwendeten Ausgabentypen
 report - Zeigt die aktuelle Summe der Ausgabe diesen Monats und des gesamten Jahres
 typ - Zeigt die gesamten Ausgaben je Typ
+limit - Setze oder aktualisiere ein monatliches Ausgabenlimit für einen Ausgabentyp

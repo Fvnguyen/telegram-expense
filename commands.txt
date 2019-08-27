@@ -4,3 +4,4 @@ tags - Zeigt alle bislang verwendeten Ausgabentypen
 report - Zeigt die aktuelle Summe der Ausgabe diesen Monats und des gesamten Jahres
 typ - Zeigt die gesamten Ausgaben je Typ
 limit - Setze oder aktualisiere ein monatliches Ausgabenlimit für einen Ausgabentyp
+entfernen - Entferne falsche Eintrage, zeigt die letzen 5 Einträge zur Auswahl an

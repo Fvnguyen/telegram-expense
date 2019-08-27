@@ -172,12 +172,12 @@ def expense(update,context):
     print(alert_delta)
     if alert_delta in range(0,21):
         print('Near limit')
-        alert_text = 'Achtung, nur noch ' + str(alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + 'bis zu deinem Limit diesen Monat!'
+        alert_text = 'Achtung, nur noch ' + str(alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + ' bis zu deinem Limit diesen Monat!'
         update.message.reply_text(alert_text)
         return ConversationHandler.END
     elif alert_delta < 0:
         print('Below limit')
-        alert_text = 'Achtung, du hast dein Limit um' + str(-1*alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + 'diesen Monat überschritten!'
+        alert_text = 'Achtung, du hast dein Limit um ' + str(-1*alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + ' diesen Monat überschritten!'
         update.message.reply_text(alert_text)
         return ConversationHandler.END
     else:

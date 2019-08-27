@@ -158,25 +158,22 @@ def expense(update,context):
     
     update.message.reply_text('Gespeichert!')
     user_id = str(update.effective_user.id)
-    alert = loadAlert(user_id)
-    df = loadDF(user_id)
     try:
-        alert_sum = df.loc[df['Type'] == context.user_data['Type']].sum()
+        alert = loadAlert(user_id)
+        df = loadDF(user_id)
     except:
-        print('Proper except return')
+        print("Could not load alerts")
         context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
         return ConversationHandler.END
-    try:
-        alert_delta = alert_sum-alert[str(context.user_data['Type'])]
+    alert_sum = df.loc[df['Type'] == context.user_data['Type']].sum()
+    print(alert_sum)
+    alert_delta = alert_sum-alert[context.user_data['Type']]
         if alert_delta <= 20:
             alert_text = 'Achtung, nur noch ' + str(alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + 'bis zu deinem Limit diesen Monat!'
             update.message.reply_text(alert_text)
         elif alert_delta < 0:
             alert_text = 'Achtung, du hast dein Limit um' + str(-1*alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + 'diesen Monat überschritten!'
             update.message.reply_text(alert_text)
-    except:
-        print("Could not load alerts")
-        return ConversationHandler.END
     return ConversationHandler.END
 
 @restricted

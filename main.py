@@ -170,7 +170,7 @@ def expense(update,context):
     print(alert[context.user_data['Type']])
     alert_delta = alert[context.user_data['Type']]-alert_sum
     print(alert_delta)
-    if alert_delta <= 20:
+    if alert_delta in range(0,21):
         print('Near limit')
         alert_text = 'Achtung, nur noch ' + str(alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + 'bis zu deinem Limit diesen Monat!'
         update.message.reply_text(alert_text)
@@ -296,7 +296,7 @@ def set_delete(update, context):
 @restricted
 def delete_entry(update,context):
     try:
-        delete = int(update.message.text)-1
+        delete = int(update.message.text)
     except:
         update.message.reply_text('Eingabe ist keine Zahl,bitte gibt eine Index-Zahl ein!')
         return DELETE
@@ -395,7 +395,7 @@ dispatcher.add_handler(typsum_handler)
 @restricted
 def unknown(update, context):
     command = str(update.message.text)
-    allowed = ['/ausgabe','/limit','/cancel']
+    allowed = ['/ausgabe','/limit','/cancel','/entfernen']
     if command in allowed:
         pass
     else:

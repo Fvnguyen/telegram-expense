@@ -33,7 +33,7 @@ def loadDB(userID):
 def loadAlert(userID):
     try:
         filename = userID+'alert'
-        db = pickle.loads(r.get(filename))
+        alert = pickle.loads(r.get(filename))
         print("loaded db")
         return alert
     except:
@@ -245,17 +245,20 @@ def saved_alert(update,context):
     try:
         user_id = str(update.effective_user.id)
         filename = user_id+'alert'
-        alerts = loadAlert(user_id)
-        alerts.update(entry)
-        palerts = pickle.dumps(alerts)
-        r.set(filename,palerts)
+        alert = loadAlert(user_id)
+        alert.update(alert_entry)
+        palert = pickle.dumps(alert)
+        r.set(filename,palert)
+        print('saved in old')
+        print(alert)
     except:
         user_id = str(update.effective_user.id)
         filename = user_id+'alert'
-        alerts = {}
-        alerts.update(entry)
-        palerts = pickle.dumps(alerts)
-        r.set(filename,palerts)
+        alert = alert_entry
+        palert = pickle.dumps(alert)
+        r.set(filename,palert)
+        print('saved in new')
+        print(alert)
     
     update.message.reply_text('Gespeichert!')
     return ConversationHandler.END

@@ -168,7 +168,7 @@ def expense(update,context):
     alert_sum = df.loc[df['Type'] == context.user_data['Type']]['Betrag'].sum()
     print(alert_sum)
     print(alert[context.user_data['Type']])
-    alert_delta = alert_sum-alert[context.user_data['Type']]
+    alert_delta = alert[context.user_data['Type']]-alert_sum
     print(alert_delta)
     if alert_delta <= 20:
         print('Near limit')
@@ -278,6 +278,50 @@ alert_handler = ConversationHandler(
     )
 dispatcher.add_handler(alert_handler,group = 2)
 
+# delete and edit handlers
+@restricted
+def set_delete(update, context):
+    user_id = str(update.effective_user.id)
+    df = loadDF(user_id)
+    try:
+        df['Zeit'] = df['Zeit'].dt.strftime('%d/%m/%y')
+        last_5 = df.tail(5).iloc[:,1:4].to_string(index = True,col_space = 9)
+        context.bot.send_message(chat_id=update.message.chat_id, text=last_5)
+        context.bot.send_message(chat_id=update.message.chat_id, text='Welchen dieser Einträge möchtest Du löschen, antworte bitte mit der Index-Nummer.')
+        return DELETE
+    except:
+        context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
+        return ConversationHandler.END
+
+@restricted
+def delete_entry(update,context):
+    try:
+        delete = int(update.message.text)-1
+    except:
+        update.message.reply_text('Eingabe ist keine Zahl,bitte gibt eine Index-Zahl ein!')
+        return DELETE
+    # Load/create pickle and add new record, afterwards save pickle
+    try:
+        user_id = str(update.effective_user.id)
+        db = pickle.loads(r.get(user_id))
+        del db[delete]
+        pdb = pickle.dumps(db)
+        r.set(user_id,pdb)
+    except:
+        update.message.reply_text('Es gibt noch keine Einträge zu löschen!')
+        return ConversationHandler.END
+    update.message.reply_text('Entfernt!')
+    return ConversationHandler.END 
+
+
+delete_handler = ConversationHandler(
+        entry_points=[CommandHandler('entfernen', set_delete)],
+        states={
+            DELETE: [MessageHandler(Filters.text,delete_entry)],
+            },
+        fallbacks=[CommandHandler('cancel', cancel)]
+    )
+dispatcher.add_handler(delete_handler,group = 3)
 
 # reporting handlers
 @restricted

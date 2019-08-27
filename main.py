@@ -47,6 +47,7 @@ def loadDF(userID):
         df['Tag'] = pd.DatetimeIndex(df['Zeit']).day
         df['Monat'] = pd.DatetimeIndex(df['Zeit']).month
         df['Jahr'] = pd.DatetimeIndex(df['Zeit']).year
+        df['Type'] = df['Type'].str.lower()
         df['Betrag'] = pd.to_numeric(df['Betrag'])
         print('DF returned')
         return df
@@ -238,9 +239,7 @@ def saved_alert(update,context):
     # save selection into user data
     context.user_data['alert_limit'] = limit
     alert_entry = {
-        "ID" : update.effective_user.id,
-        "Type" : context.user_data['Type_alert'],
-        "Limit" : context.user_data['alert_limit']
+        context.user_data['Type_alert']:context.user_data['alert_limit']
     }
     # Load/create pickle and add new record, afterwards save pickle
     try:
@@ -253,7 +252,7 @@ def saved_alert(update,context):
     except:
         user_id = str(update.effective_user.id)
         filename = user_id+'alert'
-        alerts = list()
+        alerts = {}
         alerts.update(entry)
         palerts = pickle.dumps(alerts)
         r.set(filename,palerts)

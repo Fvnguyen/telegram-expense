@@ -168,12 +168,12 @@ def expense(update,context):
     alert_sum = df.loc[df['Type'] == context.user_data['Type']].sum()
     print(alert_sum)
     alert_delta = alert_sum-alert[context.user_data['Type']]
-        if alert_delta <= 20:
-            alert_text = 'Achtung, nur noch ' + str(alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + 'bis zu deinem Limit diesen Monat!'
-            update.message.reply_text(alert_text)
-        elif alert_delta < 0:
-            alert_text = 'Achtung, du hast dein Limit um' + str(-1*alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + 'diesen Monat überschritten!'
-            update.message.reply_text(alert_text)
+    if alert_delta <= 20:
+        alert_text = 'Achtung, nur noch ' + str(alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + 'bis zu deinem Limit diesen Monat!'
+        update.message.reply_text(alert_text)
+    elif alert_delta < 0:
+        alert_text = 'Achtung, du hast dein Limit um' + str(-1*alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + 'diesen Monat überschritten!'
+        update.message.reply_text(alert_text)
     return ConversationHandler.END
 
 @restricted

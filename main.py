@@ -343,7 +343,7 @@ dispatcher.add_handler(typsum_handler)
 @restricted
 def unknown(update, context):
     command = str(update.message.text)
-    allowed = ['/ausgabe','/limit']
+    allowed = ['/ausgabe','/limit','/cancel']
     if command in allowed:
         pass
     else:

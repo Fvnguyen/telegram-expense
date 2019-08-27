@@ -34,10 +34,10 @@ def loadAlert(userID):
     try:
         filename = userID+'alert'
         alert = pickle.loads(r.get(filename))
-        print("loaded db")
+        print("loaded alerts")
         return alert
     except:
-        print("did not load db")
+        print("did not load alerts")
         return {}
 
 def loadDF(userID):
@@ -165,7 +165,7 @@ def expense(update,context):
         print("Could not load alerts")
         context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
         return ConversationHandler.END
-    alert_sum = df.loc[df['Type'] == context.user_data['Type']].sum()
+    alert_sum = df.loc[df['Type'] == context.user_data['Type']]['Betrag'].sum()
     print(alert_sum)
     alert_delta = alert_sum-alert[context.user_data['Type']]
     if alert_delta <= 20:

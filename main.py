@@ -342,7 +342,12 @@ dispatcher.add_handler(typsum_handler)
 #Unknown commands handler
 @restricted
 def unknown(update, context):
-    context.bot.send_message(chat_id=update.message.chat_id, text="Diesen Befehl gibt es nicht, bitte benutze das Command-Menü unten rechts.")
+    command = str(update.message.text)
+    allowed = ['/ausgabe','/limit']
+    if command in allowed:
+        pass
+    else:
+        context.bot.send_message(chat_id=update.message.chat_id, text="Diesen Befehl gibt es nicht, bitte benutze das Command-Menü unten rechts.")
 
 unknown_handler = MessageHandler(Filters.command, unknown)
 dispatcher.add_handler(unknown_handler)

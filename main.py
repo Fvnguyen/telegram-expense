@@ -395,14 +395,10 @@ dispatcher.add_handler(typsum_handler)
 def plot_typ(update, context):
     user_id = str(update.effective_user.id)
     df = loadDF(user_id)
-    try:
-        pdf = df.groupby(['Monat','Type'])['Betrag'].sum().reset_index(name='Betrag').round(1)
-        p = (ggplot(pdf, aes(x = 'Monat', y = 'Betrag',fill='Type')) + geom_col(position='dodge') + geom_text(aes(label = 'Betrag', group = 'Type'),position = position_dodge(width = 0.9),size = 10))
-        p.save(filename = 'month_plot.png', height=5, width=5, units = 'in', dpi=1000)
-        context.bot.send_photo(chat_id=update.message.chat_id,photo = open('test.png', 'rb'))
-    except:
-        print('Proper except return')
-        context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
+    pdf = df.groupby(['Monat','Type'])['Betrag'].sum().reset_index(name='Betrag').round(1)
+    p = (ggplot(pdf, aes(x = 'Monat', y = 'Betrag',fill='Type')) + geom_col(position='dodge') + geom_text(aes(label = 'Betrag', group = 'Type'),position = position_dodge(width = 0.9),size = 10))
+    p.save(filename = 'month_plot.png', height=5, width=5, units = 'in', dpi=1000)
+    context.bot.send_photo(chat_id=update.message.chat_id,photo = open('month_plot.png', 'rb'))
 
 
 plot_handler = CommandHandler("plot", plot_typ)

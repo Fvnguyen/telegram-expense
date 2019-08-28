@@ -396,8 +396,7 @@ dispatcher.add_handler(typsum_handler)
 def plot_typ(update, context):
     user_id = str(update.effective_user.id)
     df = loadDF(user_id)
-    df['Monatnr'] = df['Monat']
-    df['Monat'] = 
+    df = df.loc[df['Jahr'] == datetime.now().year]
     df['Monatsname'] = df['Zeit'].dt.month_name()
     benutzte = df['Monatsname'].tolist()
     Monatsnamen =['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']

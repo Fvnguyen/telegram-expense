@@ -399,7 +399,7 @@ def plot_typ(update, context):
         pdf = df.groupby(['Monat','Type'])['Betrag'].sum().reset_index(name='Betrag').round(1)
         p = (ggplot(pdf, aes(x = 'Monat', y = 'Betrag',fill='Type')) + geom_col(position='dodge') + geom_text(aes(label = 'Betrag', group = 'Type'),position = position_dodge(width = 0.9),size = 10))
         p.save(filename = 'month_plot.png', height=5, width=5, units = 'in', dpi=1000)
-        context.bot.send_photo(chat_id=update.message.chat_id,open('test.png', 'rb'))
+        context.bot.send_photo(chat_id=update.message.chat_id,photo = open('test.png', 'rb'))
     except:
         print('Proper except return')
         context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")

@@ -7,6 +7,7 @@ import pickle
 import redis
 from datetime import datetime
 import pandas as pd
+from plotnine import *
 
 LIST_OF_ADMINS = [961108390]
 TELEGRAM_TOKEN = "936719065:AAEtWah8YV4x_68CFxXkOeJGvbsk5KukyrI"

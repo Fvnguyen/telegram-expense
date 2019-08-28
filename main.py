@@ -397,14 +397,15 @@ def plot_typ(update, context):
     user_id = str(update.effective_user.id)
     df = loadDF(user_id)
     df = df.loc[df['Jahr'] == datetime.now().year]
+    df = df.loc[df['Monat'] >= (datetime.now().month-3)]
     df['Monatsname'] = df['Zeit'].dt.month_name()
     benutzte = df['Monatsname'].tolist()
     Monatsnamen =['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     Monatsnamen =  [x for x in Monatsnamen if x in benutzte]
     df['Monat'] = pd.Categorical(df['Monatsname'], categories=Monatsnamen)
     pdf = df.groupby(['Monat','Type'])['Betrag'].sum().reset_index(name='Betrag').round(1)
-    p = (ggplot(pdf, aes(x = 'Monat', y = 'Betrag',fill='Type')) + geom_col(position='dodge') + geom_text(aes(label = 'Betrag', group = 'Type'),position = position_dodge(width = 0.9),size = 10))
-    p.save(filename = 'month_plot.png', height=4, width=4, units = 'in', dpi=100)
+    p = (ggplot(pdf, aes(x = 'Monat', y = 'Betrag',fill='Type')) + geom_col(position='dodge') + geom_text(aes(label = 'Betrag', group = 'Type'),position = position_dodge(width = 0.9),size = 10))  + coord_flip() + labs(Y = 'Betrag in €', x = 'Monat', title = 'Ausgaben je Typ über die letzten drei Monate')
+    p.save(filename = 'month_plot.png', height=4, width=6, units = 'in', dpi=100)
     context.bot.send_photo(chat_id=update.message.chat_id,photo = open('month_plot.png', 'rb'))
 
 

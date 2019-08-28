@@ -398,7 +398,7 @@ def plot_typ(update, context):
     df = loadDF(user_id)
     pdf = df.groupby(['Monat','Type'])['Betrag'].sum().reset_index(name='Betrag').round(1)
     p = (ggplot(pdf, aes(x = 'Monat', y = 'Betrag',fill='Type')) + geom_col(position='dodge') + geom_text(aes(label = 'Betrag', group = 'Type'),position = position_dodge(width = 0.9),size = 10))
-    p.save(filename = 'month_plot.png', height=5, width=5, units = 'in', dpi=1000)
+    p.save(filename = 'month_plot.png', height=800, width=800, units = 'px', dpi=1000)
     context.bot.send_photo(chat_id=update.message.chat_id,photo = open('month_plot.png', 'rb'))
 
 

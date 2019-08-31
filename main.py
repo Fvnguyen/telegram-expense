@@ -11,6 +11,7 @@ from plotnine import *
 import numpy as np
 import matplotlib.pyplot as plt
 import six
+import add_data as ad
 
 LIST_OF_ADMINS = [961108390]
 TELEGRAM_TOKEN = "936719065:AAEtWah8YV4x_68CFxXkOeJGvbsk5KukyrI"
@@ -450,8 +451,10 @@ def weather(update,context):
     custom_keyboard = [[location_keyboard]]
     reply_markup = ReplyKeyboardMarkup(custom_keyboard)
     context.bot.send_message(chat_id=update.message.chat_id,text="Would you mind sharing your location with me?",reply_markup=reply_markup)
-    print(update.message.location)
-    location = update.message.location
+    print(update.message.location.latitude)
+    print(update.message.location.longitude)
+    temp = ad.getweather(update.message.location.latitude,update.message.location.longitude)
+    context.bot.send_message(chat_id=update.message.chat_id,text="Die Temperatur ist gerade "+str(temp)+"C°")
 
 weather_handler = CommandHandler('wetter', weather)
 dispatcher.add_handler(weather_handler)

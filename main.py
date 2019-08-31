@@ -456,8 +456,8 @@ def weather(update,context):
 def getweather(update,context):
     print(update.message.location.latitude)
     print(update.message.location.longitude)
-    temp = ad.getweather(update.message.location.latitude,update.message.location.longitude)
-    context.bot.send_message(chat_id=update.message.chat_id,text="Die Temperatur ist gerade "+str(temp)+"C°")
+    summary = ad.getweather(update.message.location.latitude,update.message.location.longitude)
+    context.bot.send_message(chat_id=update.message.chat_id,text=summary)
     return ConversationHandler.END
 
 weather_handler = ConversationHandler(

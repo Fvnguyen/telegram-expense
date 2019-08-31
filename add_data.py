@@ -10,5 +10,7 @@ def getweather(lat,lon):
     }
     response = requests.request("GET", url, headers=headers, params=querystring)
     wetter = eval(response.text)
-    temp = wetter['main']['temp']
-    return temp
+    city =  wetter['name']
+    temp = str(wetter['main']['temp'])
+    summary = 'In '+city+' sind es gerade '+temp+'C°'
+    return summary

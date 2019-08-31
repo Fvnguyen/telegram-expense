@@ -9,6 +9,6 @@ def getweather(lat,lon):
     'x-rapidapi-key': "e8c26025abmsh045b21e5a969e8ap15fc5djsnbdc016803368"
     }
     response = requests.request("GET", url, headers=headers, params=querystring)
-    wetter = eval(test.text)
+    wetter = eval(response.text)
     temp = wetter['main']['temp']
     return temp

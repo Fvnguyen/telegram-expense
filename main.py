@@ -97,7 +97,7 @@ def restricted(func):
     return wrapped
 
 # Primary saving handler
-ACCOUNT, NEW_ACCOUNT, EXPENSE, SAVED, TAG, ALERT, DELETE = range(7)
+ACCOUNT, NEW_ACCOUNT, EXPENSE, SAVED, TAG, ALERT, DELETE, WEATHER = range(8)
 #ACCOUNT, EXPENSE, SAVED = range(3)
 
 @restricted
@@ -451,18 +451,29 @@ def weather(update,context):
     custom_keyboard = [[location_keyboard]]
     reply_markup = ReplyKeyboardMarkup(custom_keyboard)
     context.bot.send_message(chat_id=update.message.chat_id,text="Would you mind sharing your location with me?",reply_markup=reply_markup)
+    return WEATHER
+
+def getweather(update,context):
     print(update.message.location.latitude)
     print(update.message.location.longitude)
     temp = ad.getweather(update.message.location.latitude,update.message.location.longitude)
     context.bot.send_message(chat_id=update.message.chat_id,text="Die Temperatur ist gerade "+str(temp)+"C°")
+    return ConversationHandler.END
 
-weather_handler = CommandHandler('wetter', weather)
-dispatcher.add_handler(weather_handler)
+weather_handler = ConversationHandler(
+        entry_points=[CommandHandler('wetter', weather)],
+        states={
+            WEATHER: [MessageHandler(Filters.location,getweather)],
+            },
+        fallbacks=[CommandHandler('cancel', cancel)]
+    )
+dispatcher.add_handler(weather_handler,group = 4)
+
 #Unknown commands handler
 @restricted
 def unknown(update, context):
     command = str(update.message.text)
-    allowed = ['/ausgabe','/limit','/cancel','/entfernen']
+    allowed = ['/ausgabe','/limit','/cancel','/entfernen', '/wetter']
     if command in allowed:
         pass
     else:

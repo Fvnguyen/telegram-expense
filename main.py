@@ -1,5 +1,5 @@
 from telegram.ext import Updater,CommandHandler,MessageHandler, Filters, RegexHandler, ConversationHandler,CallbackQueryHandler
-from telegram import InlineQueryResultArticle, InputTextMessageContent, ParseMode
+from telegram import InlineQueryResultArticle, InputTextMessageContent, ParseMode, KeyboardButton, ReplyKeyboardMarkup
 import os
 from functools import wraps
 import logging
@@ -444,6 +444,17 @@ def plot_typ(update, context):
 plot_handler = CommandHandler("plot", plot_typ)
 dispatcher.add_handler(plot_handler)
 
+@restricted
+def weather(update,context):
+    location_keyboard = KeyboardButton(text="send_location", request_location=True)
+    custom_keyboard = [[location_keyboard]]
+    reply_markup = ReplyKeyboardMarkup(custom_keyboard)
+    context.bot.send_message(chat_id=update.message.chat_id,text="Would you mind sharing your location with me?",reply_markup=reply_markup)
+    print(update.message.location)
+    location = update.message.location
+
+weather_handler = CommandHandler('wetter', weather)
+dispatcher.add_handler(weather_handler)
 #Unknown commands handler
 @restricted
 def unknown(update, context):

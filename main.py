@@ -191,8 +191,8 @@ def expense(update,context):
         df = loadDF(user_id)
     except:
         print("Could not load alerts")
-        context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
         return ConversationHandler.END
+    df = df.loc[df['Monat'] == datetime.now().month]
     alert_sum = df.loc[df['Type'] == context.user_data['Type']]['Betrag'].sum()
     print(alert_sum)
     print(alert[context.user_data['Type']])
@@ -211,6 +211,7 @@ def expense(update,context):
     else:
         print('Not above limit')
         return ConversationHandler.END
+    return ConversationHandler.END
 
 @restricted
 def cancel(update,context):

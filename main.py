@@ -192,26 +192,28 @@ def expense(update,context):
     except:
         print("Could not load alerts")
         return ConversationHandler.END
-    df = df.loc[df['Monat'] == datetime.now().month]
-    alert_sum = df.loc[df['Type'] == context.user_data['Type']]['Betrag'].sum()
-    print(alert_sum)
-    print(alert[context.user_data['Type']])
-    alert_delta = alert[context.user_data['Type']]-alert_sum
-    print(alert_delta)
-    if alert_delta in range(0,21):
-        print('Near limit')
-        alert_text = 'Achtung, nur noch ' + str(alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + ' bis zu deinem Limit diesen Monat!'
-        update.message.reply_text(alert_text)
+    try:
+        df = df.loc[df['Monat'] == datetime.now().month]
+        alert_sum = df.loc[df['Type'] == context.user_data['Type']]['Betrag'].sum()
+        print(alert_sum)
+        print(alert[context.user_data['Type']])
+        alert_delta = alert[context.user_data['Type']]-alert_sum
+        print(alert_delta)
+        if alert_delta in range(0,21):
+            print('Near limit')
+            alert_text = 'Achtung, nur noch ' + str(alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + ' bis zu deinem Limit diesen Monat!'
+            update.message.reply_text(alert_text)
+            return ConversationHandler.END
+        elif alert_delta < 0:
+            print('Below limit')
+            alert_text = 'Achtung, du hast dein Limit um ' + str(-1*alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + ' diesen Monat überschritten!'
+            update.message.reply_text(alert_text)
+            return ConversationHandler.END
+        else:
+            print('Not above limit')
+            return ConversationHandler.END
+    except:
         return ConversationHandler.END
-    elif alert_delta < 0:
-        print('Below limit')
-        alert_text = 'Achtung, du hast dein Limit um ' + str(-1*alert_delta) + '€ in der Kategorie ' + str(context.user_data['Type']) + ' diesen Monat überschritten!'
-        update.message.reply_text(alert_text)
-        return ConversationHandler.END
-    else:
-        print('Not above limit')
-        return ConversationHandler.END
-    return ConversationHandler.END
 
 @restricted
 def cancel(update,context):

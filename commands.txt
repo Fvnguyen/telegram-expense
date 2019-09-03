@@ -6,3 +6,4 @@ plot - Zeige die Ausgaben der letzten drei Monate nach Typ und Monat
 typ - Zeigt die gesamten Ausgaben je Typ
 limit - Setze oder aktualisiere ein monatliches Ausgabenlimit für einen Ausgabentyp
 entfernen - Entferne falsche Eintrage, zeigt die letzen 5 Einträge zur Auswahl an
+wetter - Zeigt das Wetter an deinem aktuellen Ort an

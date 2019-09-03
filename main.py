@@ -449,6 +449,17 @@ plot_handler = CommandHandler("plot", plot_typ)
 dispatcher.add_handler(plot_handler)
 
 @restricted
+def show_all(update,context):
+    user_id = str(update.effective_user.id)
+    url = 'https://flaskrtest3.herokuapp.com/ausgaben/'+user_id
+    summary = '[Hier sind all deine Einträge.]'+'('+url+')'
+    context.bot.send_message(chat_id=update.message.chat_id, text=summary,parse_mode=ParseMode.MARKDOWN)
+
+all_handler = CommandHandler("alle", show_all)
+dispatcher.add_handler(all_handler)
+
+# Weather Handler
+@restricted
 def weather(update,context):
     location_keyboard = KeyboardButton(text="send_location", request_location=True)
     custom_keyboard = [[location_keyboard]]

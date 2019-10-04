@@ -1,2 +1,1 @@
-# vapor-bot
- A telegram bot that vaporizes stuff
+A telegram bot that tracks expenses

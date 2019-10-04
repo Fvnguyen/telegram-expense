@@ -14,7 +14,9 @@ import six
 import add_data as ad
 
 # list of telegram user IDs to restrict bot usage
-LIST_OF_ADMINS = [int(float(os.environ.get("FN"))),int(float(os.environ.get("LBN")))]
+FN = int(float(os.environ.get("FN")))
+LBN = int(float(os.environ.get("LBN")))
+LIST_OF_ADMINS = [FN,LBN]
 
 # Tokens for redis and telegram
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
@@ -176,16 +178,16 @@ def expense(update,context):
     # Load/create pickle and add new record, afterwards save pickle
     try:
         user_id = str(update.effective_user.id)
-        if user_id == '801433229':
-            user_id = '961108390'
+        if user_id == str(LBN):
+            user_id = str(FN)
         db = pickle.loads(r.get(user_id))
         db.append(entry)
         pdb = pickle.dumps(db)
         r.set(user_id,pdb)
     except:
         user_id = str(update.effective_user.id)
-        if user_id == '801433229':
-            user_id = '961108390'
+        if user_id == str(LBN):
+            user_id = str(FN)
         db = list()
         db.append(entry)
         pdb = pickle.dumps(db)
@@ -193,8 +195,8 @@ def expense(update,context):
     
     update.message.reply_text('Gespeichert!')
     user_id = str(update.effective_user.id)
-    if user_id == '801433229':
-        user_id = '961108390'
+    if user_id == str(LBN):
+        user_id = str(FN)
     try:
         alert = loadAlert(user_id)
         df = loadDF(user_id)
@@ -255,8 +257,8 @@ def tag_alert(update,context):
     tag = tag.lower()
     tag = tag.strip()
     user_id = str(update.effective_user.id)
-    if user_id == '801433229':
-        user_id = '961108390'
+    if user_id == str(LBN):
+        user_id = str(FN)
     db = loadDB(user_id)
     if  any(db):
         tags = [x['Type'] for x in db if x]
@@ -291,8 +293,8 @@ def saved_alert(update,context):
     # Load/create pickle and add new record, afterwards save pickle
     try:
         user_id = str(update.effective_user.id)
-        if user_id == '801433229':
-            user_id = '961108390'
+        if user_id == str(LBN):
+            user_id = str(FN)
         filename = user_id+'alert'
         alert = loadAlert(user_id)
         alert.update(alert_entry)
@@ -302,8 +304,8 @@ def saved_alert(update,context):
         print(alert)
     except:
         user_id = str(update.effective_user.id)
-        if user_id == '801433229':
-            user_id = '961108390'
+        if user_id == str(LBN):
+            user_id = str(FN)
         filename = user_id+'alert'
         alert = alert_entry
         palert = pickle.dumps(alert)
@@ -328,8 +330,8 @@ dispatcher.add_handler(alert_handler,group = 2)
 @restricted
 def set_delete(update, context):
     user_id = str(update.effective_user.id)
-    if user_id == '801433229':
-        user_id = '961108390'
+    if user_id == str(LBN):
+        user_id = str(FN)
     df = loadDF(user_id)
     try:
         df['Zeit'] = df['Zeit'].dt.strftime('%d/%m/%y')
@@ -378,8 +380,8 @@ dispatcher.add_handler(delete_handler,group = 3)
 @restricted
 def show_last(update, context):
     user_id = str(update.effective_user.id)
-    if user_id == '801433229':
-        user_id = '961108390'
+    if user_id == str(LBN):
+        user_id = str(FN)
     df = loadDF(user_id)
     try:
         df['Zeit'] = df['Zeit'].dt.strftime('%d/%m/%y')
@@ -399,8 +401,8 @@ dispatcher.add_handler(last_handler)
 @restricted
 def show_tags(update, context):
     user_id = str(update.effective_user.id)
-    if user_id == '801433229':
-        user_id = '961108390'
+    if user_id == str(LBN):
+        user_id = str(FN)
     db = loadDB(user_id)
     if  any(db):
         tags = [x['Type'] for x in db if x]
@@ -419,8 +421,8 @@ dispatcher.add_handler(tag_handler)
 @restricted
 def overview(update, context):
     user_id = str(update.effective_user.id)
-    if user_id == '801433229':
-        user_id = '961108390'
+    if user_id == str(LBN):
+        user_id = str(FN)
     df = loadDF(user_id)
     try:
         monat = df.loc[df['Monat'] == datetime.now().month]
@@ -439,8 +441,8 @@ dispatcher.add_handler(overview_handler)
 @restricted
 def sum_typ(update, context):
     user_id = str(update.effective_user.id)
-    if user_id == '801433229':
-        user_id = '961108390'
+    if user_id == str(LBN):
+        user_id = str(FN)
     df = loadDF(user_id)
     try:
         summe = df.groupby(['Type'])['Betrag'].sum().to_string()
@@ -456,8 +458,8 @@ dispatcher.add_handler(typsum_handler)
 @restricted
 def plot_typ(update, context):
     user_id = str(update.effective_user.id)
-    if user_id == '801433229':
-        user_id = '961108390'
+    if user_id == str(LBN):
+        user_id = str(FN)
     df = loadDF(user_id)
     df = df.loc[df['Jahr'] == datetime.now().year]
     df = df.loc[df['Monat'] >= (datetime.now().month-3)]
@@ -478,8 +480,8 @@ dispatcher.add_handler(plot_handler)
 @restricted
 def show_all(update,context):
     user_id = str(update.effective_user.id)
-    if user_id == '801433229':
-        user_id = '961108390'
+    if user_id == str(LBN):
+        user_id = str(FN)
     url = 'https://flaskrtest3.herokuapp.com/ausgaben/'+user_id
     summary = '[Hier sind all deine Einträge.]'+'('+url+')'
     context.bot.send_message(chat_id=update.message.chat_id, text=summary,parse_mode=ParseMode.MARKDOWN)
@@ -529,5 +531,5 @@ dispatcher.add_handler(unknown_handler)
 updater.start_webhook(listen="0.0.0.0",
                     port=PORT,
                     url_path=TELEGRAM_TOKEN)
-updater.bot.set_webhook("https://flexpense.herokuapp.com/" + TELEGRAM_TOKEN)
+updater.bot.set_webhook(os.environ.get("WEBHOOK_URL") + TELEGRAM_TOKEN)
 updater.idle()

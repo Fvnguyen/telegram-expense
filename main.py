@@ -14,7 +14,7 @@ import six
 import add_data as ad
 
 # list of telegram user IDs to restrict bot usage
-LIST_OF_ADMINS = [os.environ.get("FN"),os.environ.get("LBN")]
+LIST_OF_ADMINS = [int(float(os.environ.get("FN"))),int(float(os.environ.get("LBN")))]
 
 # Tokens for redis and telegram
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")

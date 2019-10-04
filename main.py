@@ -13,8 +13,11 @@ import matplotlib.pyplot as plt
 import six
 import add_data as ad
 
-LIST_OF_ADMINS = [961108390,801433229]
-TELEGRAM_TOKEN = "936719065:AAEtWah8YV4x_68CFxXkOeJGvbsk5KukyrI"
+# list of telegram user IDs to restrict bot usage
+LIST_OF_ADMINS = [os.environ.get("FN"),os.environ.get("LBN")]
+
+# Tokens for redis and telegram
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 entry = {}
 r = redis.from_url(os.environ.get("REDIS_URL"))
 

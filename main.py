@@ -16,6 +16,7 @@ import add_data as ad
 # list of telegram user IDs to restrict bot usage
 FN = int(float(os.environ.get("FN")))
 LBN = int(float(os.environ.get("LBN")))
+GF = int(float(os.environ.get("GF")))
 LIST_OF_ADMINS = [FN,LBN]
 
 # Tokens for redis and telegram
@@ -107,7 +108,7 @@ ACCOUNT, NEW_ACCOUNT, EXPENSE, SAVED, TAG, ALERT, DELETE, WEATHER = range(8)
 
 @restricted
 def start(update, context):
-    context.bot.send_message(chat_id = update.message.chat_id, text="Hallo Lara und Fabian, dies ist euer privater Ausgabentracker :)")
+    context.bot.send_message(chat_id = update.message.chat_id, text="Hallo liebes Mitglied der Familie Farny-Nguyen, dies ist Dein privater Ausgabentracker :)")
     print(update.message.from_user.id)
 
 start_handler = CommandHandler("start",start)

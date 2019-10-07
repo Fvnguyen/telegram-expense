@@ -109,7 +109,11 @@ ACCOUNT, NEW_ACCOUNT, EXPENSE, SAVED, TAG, ALERT, DELETE, WEATHER = range(8)
 
 @restricted
 def start(update, context):
-    context.bot.send_message(chat_id = update.message.chat_id, text="Hallo liebes Mitglied der Familie Farny-Nguyen, dies ist Dein privater Ausgabentracker :)")
+    user = update.effective_user.first_name
+    try:
+        context.bot.send_message(chat_id = update.message.chat_id, text="Hallo {}, dies ist Dein privater Ausgabentracker :)".format(user))
+    except:
+        context.bot.send_message(chat_id = update.message.chat_id, text="Hallo liebes Mitglied der Familie Farny-Nguyen, dies ist Dein privater Ausgabentracker :)")
     print(update.message.from_user.id)
 
 start_handler = CommandHandler("start",start)

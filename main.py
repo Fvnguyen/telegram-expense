@@ -450,15 +450,14 @@ def sum_typ(update, context):
     if user_id == str(LBN):
         user_id = str(FN)
     df = loadDF(user_id)
-        #summe = df.groupby(['Type'])['Betrag'].sum().to_string()
-    summe = df.groupby(['Type'])['Betrag'].sum()
-    summe = render_mpl_table(summe, header_columns=0, col_width=4)
-    summe.get_figure().savefig('summe.png')
-    context.bot.send_photo(chat_id=update.message.chat_id, photo=open('summe.png', 'rb'))
-    #context.bot.send_message(chat_id=update.message.chat_id, text=summe)
-    #except:
-        #print('Proper except return')
-        #context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
+    try:
+        summe = df.groupby(['Type'])['Betrag'].sum().reset_index().round(1)
+        summe = render_mpl_table(summe, header_columns=0, col_width=4)
+        summe.get_figure().savefig('summe.png')
+        context.bot.send_photo(chat_id=update.message.chat_id, photo=open('summe.png', 'rb'))
+    except:
+        print('Proper except return')
+        context.bot.send_message(chat_id=update.message.chat_id, text="Noch keine Daten.")
 
 
 typsum_handler = CommandHandler("typ", sum_typ)

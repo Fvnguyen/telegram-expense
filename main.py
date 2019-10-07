@@ -17,7 +17,8 @@ import add_data as ad
 FN = int(float(os.environ.get("FN")))
 LBN = int(float(os.environ.get("LBN")))
 GF = int(float(os.environ.get("GF")))
-LIST_OF_ADMINS = [FN,LBN]
+LN = int(float(os.environ.get("GF")))
+LIST_OF_ADMINS = [FN,LBN,GF,LN]
 
 # Tokens for redis and telegram
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
